@@ -1,0 +1,99 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{parskip}
+\usepackage{titling}
+\usepackage{graphicx,xcolor,multirow,multicol}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,dsfont,mathtools,blindtext}
+\usepackage[left=2cm, right=2cm, bottom=2cm]{geometry}
+\usepackage[inline]{asymptote}
+\usepackage{float}
+\usepackage{minted}
+\pagenumbering{gobble}
+\setlength{\droptitle}{-8em}
+\renewcommand*\contentsname{Table of Contents}
+\usepackage{hyperref}
+\setlength{\skip\footins}{60pt}
+
+\begin{document}
+
+\begin{center} 
+        \includegraphics[scale = 0.5]{FGV_logo.png}
+        
+        \textbf{Fundação Getúlio Vargas}\\
+        \textbf{School of Applied Mathematics}
+
+        \vspace{3cm}
+        \textbf{\Large Vertical Life Database}
+
+        \vspace{12cm}
+        \textbf{Nicholas Farrel Ferraz de Faria}
+\end{center}
+
+\newpage
+
+\section{Introduction}
+
+\textit{Vertical Life} is an application designed for climbers that provides a comprehensive log of climbing sectors and routes. Users can track their friends' ascents and also share their own. Each route in the application is classified into one of the three most popular climbing styles:
+\textit{Sport}\footnote{A climbing style where permanent protections are pre-installed in the rock (bolts, anchors)},
+\textit{Boulder}\footnote{A climbing style practiced on short boulders (usually up to 5 meters) with crash pads for protection}, and
+\textit{Trad}\footnote{A climbing style where the climber places protection devices (friends, nuts, etc.) during the ascent}.
+The system also allows users to log their ascents and rate the experience using a 1 to 5 star scale.\\
+\ To better understand how the app works, the next section outlines the database requirements.
+
+\section{Requirements}
+
+\begin{enumerate}
+    \item Strong entity \textbf{Climber} with attributes \textbf{ClimberID} and \textbf{ClimberName}.  
+    \textbf{Climber} represents the app's user.
+
+    \item Strong entity \textbf{Route} with attributes \textbf{RouteID} and \textbf{RouteName}.  
+    \textbf{Route} represents a climbing route.
+
+    \item Weak entity \textbf{RouteStyle} used for classification, with attributes \textbf{RouteStyleID} and \textbf{RouteStyleName}.  
+    It is used to categorize \textbf{Route} instances according to their climbing style.  
+    Each \textbf{RouteStyle} instance represents a fixed value like \textit{Sport}, \textit{Trad}, or \textit{Boulder}, and is used solely to identify the climbing type of a \textbf{Route}.
+
+    \item Strong entity \textbf{Ascent} with attributes \textbf{AscentID}, \textbf{AscentDate}, and \textbf{AscentRating} (an integer from 1 to 5).  
+    \textbf{Ascent} represents the log of a climber completing a specific \textbf{Route}.
+
+    \item Strong entity \textbf{Sector} with attributes \textbf{SectorID} and \textbf{SectorLocation}, representing a geographical or organizational grouping of \textbf{Route} instances.  
+    \textbf{SectorLocation} is composed of latitude and longitude.
+
+    \item Simple relation \textbf{ClimberLogsAscent} between \textbf{Climber} and \textbf{Ascent}, with a \textbf{1:N} relationship (optional for \textbf{Climber}, mandatory for \textbf{Ascent}).  
+    This relation represents a climber logging an ascent.  
+    Each \textbf{Climber} may be associated with many or no \textbf{Ascents}, while every \textbf{Ascent} must be associated with exactly one \textbf{Climber}.  
+    The only way to insert new \textbf{Route} or \textbf{Sector} instances into the system is by registering a related \textbf{Ascent}.
+
+    \item Simple relation \textbf{RouteHasAscent} between \textbf{Route} and \textbf{Ascent}, with a \textbf{1:N} relationship (mandatory for both).  
+    This relation associates a \textbf{Route} with the \textbf{Ascents} that have been logged on it.  
+    A \textbf{Route} only exists if it is linked to at least one \textbf{Ascent}.
+
+    \item Simple relation \textbf{RouteHasStyle} between \textbf{Route} and \textbf{RouteStyle}, with a \textbf{N:1} relationship (optional for \textbf{Route}, mandatory for \textbf{RouteStyle}).  
+    This relation classifies each \textbf{Route} according to its style.  
+    Some \textbf{RouteStyle} categories might not have any associated \textbf{Route} instances.
+
+    \item Simple relation \textbf{RouteInSector} between \textbf{Route} and \textbf{Sector}, with a \textbf{N:1} relationship (mandatory for both).  
+    This relation links a \textbf{Route} to its \textbf{Sector}.  
+    A \textbf{Sector} only exists in the system if there is at least one \textbf{Route} (with at least one \textbf{Ascent}) linked to it.
+
+    \item Simple relation \textbf{ClimberFollowsSector} between \textbf{Climber} and \textbf{Sector}, with a \textbf{N:N} relationship (optional for both).  
+    This relation allows a \textbf{Climber} to follow a \textbf{Sector}, receiving updates about new \textbf{Ascents} in that area.
+
+    \item Simple relation \textbf{ClimberFollowsClimber}, a self-relationship in \textbf{Climber}, with a \textbf{N:N} cardinality (optional for both).  
+    This relation allows a \textbf{Climber} to follow another, receiving updates about their logged \textbf{Ascents}.
+\end{enumerate}
+
+\section{ER Diagram}
+
+\begin{center}
+    \includegraphics[scale=0.15]{Diagrama ER.png}
+\end{center}
+
+\section{Relational Diagram}
+
+\begin{center}
+    \includegraphics[scale=0.15]{Diagrama Relacional.png}
+\end{center}
+
+\end{document}
