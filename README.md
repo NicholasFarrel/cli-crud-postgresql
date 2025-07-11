@@ -1,6 +1,6 @@
 # CLI CRUD PostgreSQL – Vertical Life
 
-This repository contains the development of a PostgreSQL-based CLI system designed for a rock climbing application named **Vertical Life**. The project covers three main stages: data modeling, command-line interaction, and index performance analysis.
+This repository contains the development of a general-purpose PostgreSQL-based CLI CRUD system, along with a complete database project for a rock climbing application named Vertical Life. The work is organized into three main stages: data modeling, command-line interaction, and index performance analysis
 
 ## 📁 Structure
 
